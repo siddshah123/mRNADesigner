@@ -110,24 +110,50 @@ def _resolve_protein_token(
             note=f"UniProt fetch did not resolve ({detail}). Sequence unresolved; "
             "paste the amino-acid sequence or enable network access.",
         )]
-    # a plain protein NAME we cannot resolve offline -> unresolved dependency
+    # a plain protein NAME: try live UniProt name-search (research, no LLM)
+    if allow_network:
+        ref = R.search_uniprot(token, species=species, allow_network=True)
+        if ref.retrieval and ref.retrieval.ok and ref.sequence:
+            return [Component(
+                kind="protein", name=ref.name, sequence=ref.sequence,
+                species=ref.species, accession=ref.accession,
+                accession_version=ref.accession_version,
+                provenance=Provenance.REFERENCE, resolved=True,
+                source_id=ref.accession, note=ref.source,
+            )]
+        detail = ref.retrieval.detail if ref.retrieval else "search failed"
+        return [Component(
+            kind="protein", name=token, sequence="", species=species,
+            provenance=Provenance.ASSUMPTION, resolved=False,
+            note=f"UniProt name-search did not resolve {token!r} ({detail}). "
+            "Provide an accession or paste the sequence. No sequence was invented.",
+        )]
+    # offline: cannot resolve a bare name -> unresolved dependency (never invented)
     return [Component(
         kind="protein", name=token, sequence="", species=species,
         provenance=Provenance.ASSUMPTION, resolved=False,
-        note="Named protein could not be resolved to an authoritative sequence "
-        "in this environment. Provide a UniProt accession or paste the sequence. "
-        "No sequence was invented.",
+        note="Named protein not resolved offline. Turn on 'Network retrieval' to "
+        "look it up in UniProt automatically, give a UniProt accession, or paste "
+        "the sequence. No sequence was invented.",
     )]
 
 
 def _split_fusion(text: str) -> list[str]:
     """Very small heuristic splitter for 'A fused to B', 'A-B fusion', 'A + B'."""
     t = text
-    for sep in [" fused to ", " fusion with ", " fused with ", " linked to ", " + "]:
+    for sep in [" fused to ", " fusion with ", " fused with ", " linked to ",
+                " conjugated to ", " displayed on ", " and ", " + ", "/"]:
         if sep in t.lower():
             # split case-insensitively on first occurrence
             i = t.lower().find(sep)
-            return [t[:i].strip(), t[i + len(sep):].strip()]
+            left, right = t[:i].strip(), t[i + len(sep):].strip()
+            # strip a trailing/leading "fusion" noun from either side
+            for junk in ("fusion", "construct", "a ", "an "):
+                if right.lower().startswith(junk):
+                    right = right[len(junk):].strip()
+                if left.lower().endswith(" " + junk):
+                    left = left[: -len(junk)].strip()
+            return [left, right]
     return [text.strip()]
 
 

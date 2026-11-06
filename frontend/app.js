@@ -417,7 +417,12 @@ async function runInterpret() {
   } catch (e) { alert(e.message); }
 }
 
+function hasInput() {
+  return ($("text").value.trim() || $("identifier").value.trim() || $("pasted").value.trim());
+}
+
 async function runDesign() {
+  if (!hasInput()) { alert("Enter at least a description in box 1 (the only required field)."); return; }
   const btn = $("btn-design"); const old = btn.innerHTML;
   btn.innerHTML = '<span class="spin"></span> designing…'; btn.disabled = true;
   try {

@@ -1,0 +1,89 @@
+{
+  "library_version": "transcript-elements-2024.1",
+  "kozak": [
+    {
+      "element_id": "kozak_consensus",
+      "role": "kozak",
+      "name": "Kozak consensus (GCCACC before ATG)",
+      "sequence": "GCCACC",
+      "version": "2024.1",
+      "source": "Kozak M. (1987) Nucleic Acids Res 15:8125-8148 (optimal translation-initiation context).",
+      "relevance": "Placed immediately 5' of the start codon to strengthen translation initiation in eukaryotes.",
+      "uncertainty": "Consensus context; optimal context can vary by transcript and host.",
+      "provenance": "reference"
+    }
+  ],
+  "five_utr": [
+    {
+      "element_id": "synthetic_minimal_5utr",
+      "role": "5utr",
+      "name": "Minimal synthetic 5' UTR (placeholder)",
+      "sequence": "GGGAAAUAAGAGAGAAAAGAAGAGUAAGAAGAAAUAUAAGA",
+      "version": "2024.1",
+      "source": "Synthetic GC-poor leader (placeholder default).",
+      "relevance": "A short, structure-light 5' leader to allow scanning; placeholder only.",
+      "uncertainty": "SYNTHETIC PLACEHOLDER; not experimentally validated. Replace with a source-backed UTR (e.g. a validated HBB 5' UTR) or user-supplied sequence for real use.",
+      "provenance": "assumption"
+    },
+    {
+      "element_id": "user_5utr",
+      "role": "5utr",
+      "name": "User-supplied 5' UTR",
+      "sequence": "",
+      "version": "user",
+      "source": "User input.",
+      "relevance": "User-provided 5' UTR.",
+      "uncertainty": "Provenance and validation are the user's responsibility.",
+      "provenance": "user"
+    }
+  ],
+  "three_utr": [
+    {
+      "element_id": "synthetic_minimal_3utr",
+      "role": "3utr",
+      "name": "Minimal synthetic 3' UTR (placeholder)",
+      "sequence": "UGAUAAUAGGCUGGAGCCUCGGUGGCCAUGCUUCUUGCCCCUUGGGCCU",
+      "version": "2024.1",
+      "source": "Synthetic 3' UTR (placeholder default).",
+      "relevance": "A short 3' UTR placeholder; many therapeutic mRNAs use stabilizing 3' UTRs (e.g. tandem beta-globin).",
+      "uncertainty": "SYNTHETIC PLACEHOLDER; not experimentally validated. Replace with a source-backed 3' UTR or user-supplied sequence for real use.",
+      "provenance": "assumption"
+    },
+    {
+      "element_id": "user_3utr",
+      "role": "3utr",
+      "name": "User-supplied 3' UTR",
+      "sequence": "",
+      "version": "user",
+      "source": "User input.",
+      "relevance": "User-provided 3' UTR.",
+      "uncertainty": "Provenance and validation are the user's responsibility.",
+      "provenance": "user"
+    }
+  ],
+  "cap": [
+    {"name": "Cap1", "chemistry": "m7G(5')ppp(5')Nm (Cap1)",
+     "source": "Standard Cap1 structure for in-vitro-transcribed mRNA.",
+     "note": "Metadata only; cap is added enzymatically/co-transcriptionally and is NOT represented as letters in the FASTA."},
+    {"name": "Cap0", "chemistry": "m7G(5')ppp(5')N (Cap0)",
+     "source": "Cap0 structure.",
+     "note": "Metadata only; not represented in sequence."},
+    {"name": "ARCA", "chemistry": "anti-reverse cap analog",
+     "source": "ARCA co-transcriptional capping.",
+     "note": "Metadata only; not represented in sequence."}
+  ],
+  "mod_nucleosides": [
+    {"name": "N1-methylpseudouridine", "replaces": "U",
+     "note": "Common modified nucleoside in therapeutic mRNA; metadata only, not a letter change in FASTA."},
+    {"name": "pseudouridine", "replaces": "U",
+     "note": "Metadata only; not represented in sequence."},
+    {"name": "5-methylcytidine", "replaces": "C",
+     "note": "Metadata only; not represented in sequence."}
+  ],
+  "polyA_defaults": {
+    "mode": "encoded",
+    "length": 120,
+    "source": "Common encoded poly(A) length range (~100-150 nt) for IVT mRNA.",
+    "note": "Encoded vs post-transcriptional tail is an explicit choice; length guidance is approximate and context-dependent."
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "key": "m_musculus",
+  "name": "Mus musculus",
+  "fractions_by_aa": {
+    "F": {
+      "TTT": 0.43,
+      "TTC": 0.57
+    },
+    "L": {
+      "TTA": 0.06,
+      "TTG": 0.13,
+      "CTT": 0.13,
+      "CTC": 0.2,
+      "CTA": 0.08,
+      "CTG": 0.39
+    },
+    "I": {
+      "ATT": 0.34,
+      "ATC": 0.5,
+      "ATA": 0.16
+    },
+    "M": {
+      "ATG": 1.0
+    },
+    "V": {
+      "GTT": 0.17,
+      "GTC": 0.25,
+      "GTA": 0.12,
+      "GTG": 0.46
+    },
+    "S": {
+      "TCT": 0.19,
+      "TCC": 0.22,
+      "TCA": 0.14,
+      "TCG": 0.05,
+      "AGT": 0.15,
+      "AGC": 0.25
+    },
+    "P": {
+      "CCT": 0.3,
+      "CCC": 0.31,
+      "CCA": 0.28,
+      "CCG": 0.1
+    },
+    "T": {
+      "ACT": 0.25,
+      "ACC": 0.35,
+      "ACA": 0.29,
+      "ACG": 0.11
+    },
+    "A": {
+      "GCT": 0.29,
+      "GCC": 0.38,
+      "GCA": 0.23,
+      "GCG": 0.1
+    },
+    "Y": {
+      "TAT": 0.42,
+      "TAC": 0.58
+    },
+    "H": {
+      "CAT": 0.4,
+      "CAC": 0.6
+    },
+    "Q": {
+      "CAA": 0.25,
+      "CAG": 0.75
+    },
+    "N": {
+      "AAT": 0.43,
+      "AAC": 0.57
+    },
+    "K": {
+      "AAA": 0.39,
+      "AAG": 0.61
+    },
+    "D": {
+      "GAT": 0.45,
+      "GAC": 0.55
+    },
+    "E": {
+      "GAA": 0.41,
+      "GAG": 0.59
+    },
+    "C": {
+      "TGT": 0.48,
+      "TGC": 0.52
+    },
+    "W": {
+      "TGG": 1.0
+    },
+    "R": {
+      "CGT": 0.09,
+      "CGC": 0.18,
+      "CGA": 0.12,
+      "CGG": 0.19,
+      "AGA": 0.21,
+      "AGG": 0.21
+    },
+    "G": {
+      "GGT": 0.18,
+      "GGC": 0.33,
+      "GGA": 0.26,
+      "GGG": 0.23
+    },
+    "*": {
+      "TAA": 0.28,
+      "TAG": 0.21,
+      "TGA": 0.51
+    }
+  },
+  "source": "Approximate relative synonymous codon usage, consistent with the Kazusa Codon Usage Database M. musculus entry.",
+  "version": "bundled-snapshot-2024.1",
+  "note": "BUNDLED APPROXIMATION; mammalian usage is close to human. Verify/refresh against the cited source before production use."
+}

@@ -1,0 +1,54 @@
+{
+  "corpus_version": "literature-fixtures-2024.1",
+  "disclaimer": "These are a small set of BUNDLED literature fixtures for offline demonstration. They are real, well-known publications used to illustrate provenance handling; the app does not claim to have retrieved their full text, and 'exact_sequence_available' reflects that abstracts/records are not full methods.",
+  "records": [
+    {
+      "source_id": "lit_pardi_2018_review",
+      "title": "mRNA vaccines - a new era in vaccinology",
+      "url": "https://www.nature.com/articles/nrd.2017.243",
+      "doi": "10.1038/nrd.2017.243",
+      "pmid": "29326426",
+      "finding": "Reviews mRNA design elements: cap, 5'/3' UTRs, codon optimization, and poly(A) tail; notes element choice affects expression but is context-dependent.",
+      "experimental_context": "Review (mammalian/therapeutic mRNA).",
+      "exact_sequence_available": false,
+      "topics": ["utr", "polyA", "codon_optimization", "cap", "mrna_general"],
+      "match_quality": "background"
+    },
+    {
+      "source_id": "lit_kozak_1987",
+      "title": "An analysis of 5'-noncoding sequences from 699 vertebrate messenger RNAs",
+      "url": "https://academic.oup.com/nar/article/15/20/8125/1163216",
+      "doi": "10.1093/nar/15.20.8125",
+      "pmid": "3313277",
+      "finding": "Defines the optimal translation-initiation context (Kozak consensus) around the start codon.",
+      "experimental_context": "Vertebrate mRNAs.",
+      "exact_sequence_available": true,
+      "topics": ["kozak", "translation_initiation"],
+      "match_quality": "exact"
+    },
+    {
+      "source_id": "lit_chen_2013_linkers",
+      "title": "Fusion protein linkers: property, design and functionality",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0169409X12003115",
+      "doi": "10.1016/j.addr.2012.09.039",
+      "pmid": "23026637",
+      "finding": "Catalogs flexible (GS) and rigid (EAAAK) linkers for fusion proteins and their effects on domain independence.",
+      "experimental_context": "Fusion protein engineering (general).",
+      "exact_sequence_available": true,
+      "topics": ["linker", "fusion"],
+      "match_quality": "exact"
+    },
+    {
+      "source_id": "lit_holtkamp_2006_polyA_utr",
+      "title": "Modification of antigen-encoding RNA increases stability, translational efficacy, and T-cell stimulatory capacity of dendritic cells",
+      "url": "https://ashpublications.org/blood/article/108/13/4009/22577",
+      "doi": "10.1182/blood-2006-04-015024",
+      "pmid": "16940422",
+      "finding": "Longer poly(A) tails and specific 3' UTR arrangements increased mRNA stability and translation in dendritic cells.",
+      "experimental_context": "Human dendritic cells (in vitro).",
+      "exact_sequence_available": false,
+      "topics": ["polyA", "utr", "stability"],
+      "match_quality": "analogous"
+    }
+  ]
+}

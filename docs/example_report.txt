@@ -1,0 +1,103 @@
+========================================================================
+mRNA DESIGNER — DESIGN REPORT   mrna_b494cbb975
+========================================================================
+*** DEMO FIXTURE: uses bundled synthetic data, NOT live research ***
+Created: 2026-11-06
+Title:   demo_reporter fused to demo_secreted_precursor
+Status:  provisional
+
+-- REQUEST ------------------------------------------------------------
+text:        'two-domain fusion with a C-terminal His tag and a linker'
+identifier:  'demo_reporter fused to demo_secreted_precursor'
+protein species (encoded): 'synthetic'
+expression host:           'h_sapiens'  (independent of above)
+cell type / in-vivo:       None / None
+
+-- ARCHITECTURE -------------------------------------------------------
+  1. [protein] Demo cytoplasmic reporter (SYNTHETIC FIXTURE)  (resolved, provenance=fixture)
+       accession=FIXTURE:DEMO-REP-01 ver=None
+       50 aa: MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFIC…
+       note: BUNDLED SYNTHETIC DEMO FIXTURE (not a real protein).
+  2. [signal_peptide] Demo secreted precursor (SYNTHETIC FIXTURE) signal peptide  (resolved, provenance=fixture)
+       accession=FIXTURE:DEMO-SEC-01 ver=None
+       21 aa: MKTLLLTLVVVTIVCLDLGYT
+       note: Signal peptide (precursor); Residues 1-21 are a synthetic signal peptide (precursor); the mature chain begins after cleavage.
+  3. [protein] Demo secreted precursor (SYNTHETIC FIXTURE) mature chain  (resolved, provenance=fixture)
+       accession=FIXTURE:DEMO-SEC-01 ver=None
+       44 aa: QNDAREILVKYGADATLQEWKNRLGPQGSTYEDLMKAVDGLVQR
+       note: Mature chain of a BUNDLED SYNTHETIC DEMO FIXTURE.
+  4. [linker] GS_flexible_(GGGGS)x3  (resolved, provenance=reference)
+       15 aa: GGGGSGGGGSGGGGS
+       note: Flexible glycine-serine linker; see Chen, Zaro & Shen (2013) Adv Drug Deliv Rev 65:1357, DOI 10.1016/j.addr.2012.09.039.
+  5. [tag] His6  (resolved, provenance=reference)
+       6 aa: HHHHHH
+       note: Standard hexahistidine affinity tag (IMAC purification).
+  Assumptions:
+    - linker = GS_flexible_(GGGGS)x3  (Two domains detected; defaulted to a flexible (GGGGS)x3 linker. Editable.)
+
+-- EVIDENCE -----------------------------------------------------------
+  [exact] Fusion protein linkers: property, design and functionality
+       url=https://www.sciencedirect.com/science/article/pii/S0169409X12003115  doi=10.1016/j.addr.2012.09.039  pmid=23026637  acc=None
+       retrieved=2026-11-06  provenance=fixture
+       finding: Catalogs flexible (GS) and rigid (EAAAK) linkers for fusion proteins and their effects on domain independence.
+       experimental context: Fusion protein engineering (general).
+       exact sequence available: True
+       supports: choice of fusion linker
+  [exact] An analysis of 5'-noncoding sequences from 699 vertebrate messenger RNAs
+       url=https://academic.oup.com/nar/article/15/20/8125/1163216  doi=10.1093/nar/15.20.8125  pmid=3313277  acc=None
+       retrieved=2026-11-06  provenance=fixture
+       finding: Defines the optimal translation-initiation context (Kozak consensus) around the start codon.
+       experimental context: Vertebrate mRNAs.
+       exact sequence available: True
+       supports: Kozak translation-initiation context
+  [analogous] Modification of antigen-encoding RNA increases stability, translational efficacy, and T-cell stimulatory capacity of dendritic cells
+       url=https://ashpublications.org/blood/article/108/13/4009/22577  doi=10.1182/blood-2006-04-015024  pmid=16940422  acc=None
+       retrieved=2026-11-06  provenance=fixture
+       finding: Longer poly(A) tails and specific 3' UTR arrangements increased mRNA stability and translation in dendritic cells.
+       experimental context: Human dendritic cells (in vitro).
+       exact sequence available: False
+       supports: UTR / poly(A) selection (context-dependent)
+  [background] mRNA vaccines - a new era in vaccinology
+       url=https://www.nature.com/articles/nrd.2017.243  doi=10.1038/nrd.2017.243  pmid=29326426  acc=None
+       retrieved=2026-11-06  provenance=fixture
+       finding: Reviews mRNA design elements: cap, 5'/3' UTRs, codon optimization, and poly(A) tail; notes element choice affects expression but is context-dependent.
+       experimental context: Review (mammalian/therapeutic mRNA).
+       exact sequence available: False
+       supports: UTR / poly(A) selection (context-dependent)
+  Retrieval states:
+    - literature_fixture: attempted=True live=False ok=True :: Matched against bundled fixture corpus (offline).
+
+-- OPTIMIZATION -------------------------------------------------------
+  optimizer=mrna-codon-opt/0.1.0  codon_table=h_sapiens:bundled-snapshot-2024.1  seed=12345
+  host=h_sapiens  GC target=[0.4,0.7]  max_homopolymer=9
+  forbidden_motifs=['GAATTC']
+  candidates (lower penalty is better):
+    baseline_max_usage   penalty=0.25    CAI=1.0    GC=0.6886 hp=5 localGC=[0.525,0.95] motif=0 (baseline)
+    baseline_repaired    penalty=0.091   CAI=0.984  GC=0.6715 hp=5 localGC=[0.525,0.775] motif=0
+    sampled_1            penalty=0.0992  CAI=0.9758 GC=0.6667 hp=5 localGC=[0.525,0.775] motif=0
+    sampled_2            penalty=0.0695  CAI=0.9805 GC=0.6642 hp=5 localGC=[0.525,0.75] motif=0 *SELECTED*
+  rationale: Selected sampled_2 with penalty 0.0695 (CAI 0.9805, GC 0.6642, max homopolymer 5). Baseline baseline_max_usage penalty 0.25 (CAI 1.0, GC 0.6886). Lower penalty is better; see candidate comparison for measured tradeoffs.
+
+-- VALIDATION ---------------------------------------------------------
+  ERRORS (0):
+  WARNINGS (0):
+  UNEVALUATED (2):
+    [n/e]   rna_structure: RNA secondary-structure metrics not evaluated (no folding tool configured in this build). Not a pass; shown as unevaluated.
+    [n/e]   scope_disclaimer: These are COMPUTATIONAL checks only. They are not evidence of expression, secretion, activity, stability, or delivery.
+  SIZE:
+    protein=136 aa; CDS=411 nt (includes_stop=True)
+    5'UTR=41  3'UTR=49  polyA(encoded)=120  TOTAL_RNA=627 nt
+    software_input_limit=50000 nt (NOT a biological recommendation)
+    biological guidance: Illustrative soft ceiling (~5 kb) often cited for efficient LNP encapsulation/translation of IVT mRNA; context- and formulation-dependent. [source=lit_pardi_2018_review, uncertain=True]
+
+-- SEQUENCES ----------------------------------------------------------
+  intended protein (136 aa):
+    MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTMKTLLLTLVVVTIVCLDLGYTQNDAREILVKYGADATLQEWKNRLGPQGSTYEDLMKAVDGLVQRGGGGSGGGGSGGGGSHHHHHH
+  optimized CDS (RNA, 411 nt, incl. stop):
+    AUGAGCAAGGGCGAGGAGCUGUUCACCGGCGUGGUGCCCAUCCUGGUGGAGCUGGACGGCGACGUGAACGGCCACAAGUUCAGCGUGAGCGGCGAGGGCGAGGGCGAUGCCACCUACGGCAAGCUGACCCUGAAGUUCAUCUGCACCACCAUGAAGACCCUGCUGCUGACCCUGGUGGUGGUGACCAUCGUGUGCCUGGACCUGGGCUACACCCAGAACGACGCCCGGGAGAUCCUGGUGAAGUACGGCGCCGACGCCACCCUGCAGGAGUGGAAGAACCGGCUGGGCCCCCAGGGCAGCACCUACGAGGACCUGAUGAAGGCCGUGGACGGCCUGGUGCAGAGGGGCGGAGGCGGAUCUGGAGGAGGAGGAAGCGGCGGAGGCGGCAGCCACCACCACCACCACCACUGA
+  mature mRNA (RNA, 627 nt, no promoter, cap=metadata):
+    GGGAAAUAAGAGAGAAAAGAAGAGUAAGAAGAAAUAUAAGAGCCACCAUGAGCAAGGGCGAGGAGCUGUUCACCGGCGUGGUGCCCAUCCUGGUGGAGCUGGACGGCGACGUGAACGGCC…
+
+NOTE: All results above are COMPUTATIONAL. They are not experimental
+evidence of expression, secretion, activity, stability, or delivery.
+========================================================================

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>mRNA Designer</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>mRNA&nbsp;Designer</h1>
+    <span class="sub">natural-language construct → traceable, computationally-validated mRNA design</span>
+    <span class="sub" id="versions"></span>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <!-- LEFT: request + context -->
+      <div>
+        <div class="panel">
+          <h2>1 · Construct request</h2>
+          <label>Natural-language description</label>
+          <textarea id="text" rows="3" placeholder="e.g. demo_reporter fused to demo_secreted_precursor with a C-terminal His tag"></textarea>
+          <label>Protein name / accession / fusion (e.g. "P60568", "demo_reporter fused to demo_secreted_precursor")</label>
+          <input id="identifier" />
+          <label>Or paste an amino-acid sequence (preserved exactly)</label>
+          <textarea id="pasted" rows="2" placeholder="MGSSHHHHHH..."></textarea>
+          <details>
+            <summary>Optional: user-supplied UTRs (opt-in)</summary>
+            <label>5′ UTR (RNA/DNA letters)</label>
+            <input id="five_utr" />
+            <label>3′ UTR (RNA/DNA letters)</label>
+            <input id="three_utr" />
+          </details>
+        </div>
+
+        <div class="panel">
+          <h2>Context (encoded protein ≠ expression host)</h2>
+          <div class="row">
+            <div><label>Protein species (encoded)</label><input id="protein_species" placeholder="e.g. human"/></div>
+            <div><label>Expression host (codon table)</label><select id="host"></select></div>
+          </div>
+          <div class="row">
+            <div><label>Cell type</label><input id="cell_type" /></div>
+            <div><label>Localization</label>
+              <select id="localization">
+                <option value="">(unspecified)</option>
+                <option value="secreted">secreted</option>
+                <option value="cytoplasmic">intracellular</option>
+                <option value="membrane">membrane</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div><label>Use</label>
+              <select id="in_vivo"><option value="">(unspecified)</option><option value="false">in vitro</option><option value="true">in vivo</option></select>
+            </div>
+            <div><label>Delivery</label><input id="delivery" placeholder="e.g. LNP"/></div>
+          </div>
+          <div class="hint">The encoded protein's species sets identity; the host sets codon usage. They are independent.</div>
+        </div>
+
+        <div class="panel">
+          <h2>Optimization objectives</h2>
+          <div class="row">
+            <div><label>GC min</label><input id="gc_min" type="number" step="0.01" value="0.40"/></div>
+            <div><label>GC max</label><input id="gc_max" type="number" step="0.01" value="0.70"/></div>
+            <div><label>Max homopolymer</label><input id="max_hp" type="number" value="9"/></div>
+          </div>
+          <div class="row">
+            <div><label>Forbidden motifs (comma-sep)</label><input id="motifs" placeholder="GAATTC,GGGGGG"/></div>
+            <div><label># candidates</label><input id="ncand" type="number" value="3"/></div>
+            <div><label>Seed</label><input id="seed" type="number" value="12345"/></div>
+          </div>
+          <div class="row">
+            <div><label>Biological size profile</label><select id="size_profile"></select></div>
+            <div><label>Network retrieval (opt-in)</label>
+              <select id="allow_network"><option value="false">off (offline, private)</option><option value="true">on (sends identifiers externally)</option></select>
+            </div>
+          </div>
+          <div class="btns">
+            <button id="btn-interpret" class="secondary">Interpret only</button>
+            <button id="btn-design">Design mRNA</button>
+          </div>
+          <div class="hint">Examples:
+            <a href="#" data-ex="tagged">tagged protein</a> ·
+            <a href="#" data-ex="fusion">fusion+linker</a> ·
+            <a href="#" data-ex="precursor">secreted precursor</a> ·
+            <a href="#" data-ex="ambiguous">ambiguous identity</a> ·
+            <a href="#" data-ex="toolong">length violation</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: results -->
+      <div>
+        <div id="status-line" class="panel" style="display:none">
+          <h2>Status</h2>
+          <div id="status-badges"></div>
+          <div id="status-note" class="hint"></div>
+        </div>
+
+        <div id="clar-panel" class="panel" style="display:none">
+          <h2>2 · Clarification (≤2 questions, one round)</h2>
+          <div id="clar-body"></div>
+          <div class="hint">You can also just edit the architecture below and re-run — no need to answer conversationally.</div>
+        </div>
+
+        <div id="arch-panel" class="panel" style="display:none">
+          <h2>3 · Architecture preview (editable)</h2>
+          <div id="arch-body"></div>
+        </div>
+
+        <div id="evidence-panel" class="panel" style="display:none">
+          <h2>4 · Research evidence</h2>
+          <div id="evidence-body"></div>
+        </div>
+
+        <div id="map-panel" class="panel" style="display:none">
+          <h2>5 · Annotated transcript map</h2>
+          <div id="map-body"></div>
+        </div>
+
+        <div id="seq-panel" class="panel" style="display:none">
+          <h2>Sequence viewer (component highlighting)</h2>
+          <div id="seq-body"></div>
+        </div>
+
+        <div id="cand-panel" class="panel" style="display:none">
+          <h2>6 · Candidate comparison</h2>
+          <div id="cand-body"></div>
+        </div>
+
+        <div id="val-panel" class="panel" style="display:none">
+          <h2>7 · Validation</h2>
+          <div id="val-body"></div>
+        </div>
+
+        <div id="dl-panel" class="panel" style="display:none">
+          <h2>9 · Export</h2>
+          <div id="dl-body" class="btns"></div>
+          <div id="roundtrip" class="hint"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

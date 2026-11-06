@@ -1,0 +1,62 @@
+{
+  "library_version": "elements-2024.1",
+  "tags": [
+    {"name": "His6", "sequence": "HHHHHH", "placement": "N_or_C",
+     "source": "Standard hexahistidine affinity tag (IMAC purification).",
+     "provenance": "reference", "note": "Common-knowledge peptide tag sequence."},
+    {"name": "FLAG", "sequence": "DYKDDDDK", "placement": "N_or_C",
+     "source": "Standard FLAG epitope tag (Hopp et al. 1988).",
+     "provenance": "reference", "note": "Common-knowledge peptide tag sequence."},
+    {"name": "HA", "sequence": "YPYDVPDYA", "placement": "N_or_C",
+     "source": "Influenza hemagglutinin (HA) epitope tag.",
+     "provenance": "reference", "note": "Common-knowledge peptide tag sequence."},
+    {"name": "Myc", "sequence": "EQKLISEEDL", "placement": "N_or_C",
+     "source": "c-Myc epitope tag (9E10 epitope).",
+     "provenance": "reference", "note": "Common-knowledge peptide tag sequence."},
+    {"name": "Strep-II", "sequence": "WSHPQFEK", "placement": "N_or_C",
+     "source": "Strep-tag II (Streptactin affinity).",
+     "provenance": "reference", "note": "Common-knowledge peptide tag sequence."},
+    {"name": "V5", "sequence": "GKPIPNPLLGLDST", "placement": "N_or_C",
+     "source": "V5 epitope tag (SV5 P/V paramyxovirus).",
+     "provenance": "reference", "note": "Common-knowledge peptide tag sequence."}
+  ],
+  "linkers": [
+    {"name": "GS_flexible_(GGGGS)x3", "sequence": "GGGGSGGGGSGGGGS",
+     "source": "Flexible glycine-serine linker; see Chen, Zaro & Shen (2013) Adv Drug Deliv Rev 65:1357, DOI 10.1016/j.addr.2012.09.039.",
+     "provenance": "reference", "note": "Standard flexible fusion linker; choice is a design decision."},
+    {"name": "GS_short_(GGGGS)x1", "sequence": "GGGGS",
+     "source": "Short flexible glycine-serine linker; Chen, Zaro & Shen (2013).",
+     "provenance": "reference", "note": "Standard flexible fusion linker."},
+    {"name": "rigid_(EAAAK)x3", "sequence": "EAAAKEAAAKEAAAK",
+     "source": "Rigid alpha-helical linker; Chen, Zaro & Shen (2013).",
+     "provenance": "reference", "note": "Rigid helical linker to keep domains apart."},
+    {"name": "GSG", "sequence": "GSG",
+     "source": "Minimal flexible spacer.",
+     "provenance": "reference", "note": "Minimal spacer; design decision."}
+  ],
+  "demo_proteins": [
+    {
+      "key": "demo_reporter",
+      "display_name": "Demo cytoplasmic reporter (SYNTHETIC FIXTURE)",
+      "accession": "FIXTURE:DEMO-REP-01",
+      "species": "synthetic",
+      "sequence": "MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTT",
+      "is_precursor": false,
+      "source": "Synthetic benign demo peptide. NOT a database entry and NOT a real protein.",
+      "note": "Bundled demo fixture only; visibly flagged as a fixture everywhere it is used."
+    },
+    {
+      "key": "demo_secreted_precursor",
+      "display_name": "Demo secreted precursor (SYNTHETIC FIXTURE)",
+      "accession": "FIXTURE:DEMO-SEC-01",
+      "species": "synthetic",
+      "signal_peptide": "MKTLLLTLVVVTIVCLDLGYT",
+      "mature_sequence": "QNDAREILVKYGADATLQEWKNRLGPQGSTYEDLMKAVDGLVQR",
+      "sequence": "MKTLLLTLVVVTIVCLDLGYTQNDAREILVKYGADATLQEWKNRLGPQGSTYEDLMKAVDGLVQR",
+      "is_precursor": true,
+      "mature_note": "Residues 1-21 are a synthetic signal peptide (precursor); the mature chain begins after cleavage.",
+      "source": "Synthetic benign demo precursor with an obviously synthetic signal peptide. NOT a real protein.",
+      "note": "Bundled demo fixture only; demonstrates precursor vs mature-chain handling."
+    }
+  ]
+}

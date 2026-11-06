@@ -186,11 +186,23 @@ A full rendered report is committed at [`docs/example_report.txt`](docs/example_
 codon optimization, transcript assembly, full validation, all exports with
 round-trip verification, bundled literature evidence, the complete browser UI.
 
-**Opt-in network (`allow_network=true`):** live **UniProt** reference fetch. In a
-sandbox that blocks `rest.uniprot.org` the failure is recorded honestly and the
-affected component is marked unresolved (design stays provisional/blocked). No
-unpublished user sequence is sent anywhere unless network retrieval is enabled;
-the response discloses every integration contacted (`retrieval_states`).
+**Only the description is required.** Every other field is optional; the more you
+give, the more constrained the design. With less, the app researches what it can
+and records explicit, labeled assumptions rather than guessing silently.
+
+**Opt-in network (`allow_network=true`):** live **UniProt** retrieval — both an
+accession fetch (`P60568`) and a **name search** (`IL4`, `lumazine synthase`),
+which resolves a plain protein name to the top reviewed Swiss-Prot sequence
+(deterministic lookup, **no LLM**). In a sandbox that blocks `rest.uniprot.org`
+the failure is recorded honestly and the component is marked unresolved (design
+stays provisional/blocked). No unpublished user sequence is sent anywhere unless
+network retrieval is enabled; the response discloses every integration contacted
+(`retrieval_states`).
+
+**No LLM is connected.** The app requires no API key and no account access. The
+language model is an optional interpretation hook only; all sequence resolution
+is either a database lookup, a user-pasted sequence, or a labeled unresolved
+dependency — never model-generated.
 
 **Not wired in this build (shown as "unevaluated" / "unavailable", never faked):**
 - Live literature search (NCBI E-utilities / Europe PMC) — the hook exists in

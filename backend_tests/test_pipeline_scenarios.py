@@ -118,6 +118,43 @@ def test_uniprot_retrieval_failure_is_recorded_not_faked():
         assert ref.retrieval.detail
 
 
+def test_uniprot_name_search_resolves_when_network_mocked(monkeypatch):
+    """With network ON and a reachable UniProt, a plain NAME resolves to a real
+    sequence (deterministic research, no LLM, no fabrication)."""
+    import httpx
+
+    fake_fasta = (">sp|P60568|IL2_HUMAN Interleukin-2 OS=Homo sapiens OX=9606 "
+                  "GN=IL2 PE=1 SV=1\nMAPTSSSTKK\nTQLQLEHLLL\n")
+
+    class _Resp:
+        status_code = 200
+        text = fake_fasta
+
+    def fake_get(url, **kw):
+        assert "rest.uniprot.org" in url
+        return _Resp()
+
+    monkeypatch.setattr(httpx, "get", fake_get)
+
+    ref = R.search_uniprot("interleukin-2", species="Homo sapiens", allow_network=True)
+    assert ref.retrieval.ok and ref.accession == "P60568"
+    assert ref.sequence == "MAPTSSSTKKTQLQLEHLLL"
+    assert ref.provenance.value == "reference"
+
+    # and the interpreter uses it to resolve a named protein end-to-end
+    arch, _ = interpret(_req(protein_identifier="interleukin-2"), allow_network=True)
+    comp = arch.components[0]
+    assert comp.resolved and comp.sequence == "MAPTSSSTKKTQLQLEHLLL"
+    assert comp.accession == "P60568"
+
+
+def test_bare_name_offline_stays_unresolved_not_invented():
+    arch, _ = interpret(_req(text="IL4 and lumazine synthase"), allow_network=False)
+    prot = [c for c in arch.components if c.kind == "protein"]
+    assert len(prot) == 2
+    assert all(not c.resolved and c.sequence == "" for c in prot)  # nothing invented
+
+
 def test_live_literature_unavailable_state_preserved():
     ev, state = literature.retrieve(["utr"], allow_network=True)
     assert state.attempted and state.ok is False and state.live is False

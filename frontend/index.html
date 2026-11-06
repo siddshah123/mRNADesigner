@@ -19,12 +19,13 @@
       <div>
         <div class="panel">
           <h2>1 · Construct request</h2>
-          <label>Natural-language description</label>
-          <textarea id="text" rows="3" placeholder="e.g. demo_reporter fused to demo_secreted_precursor with a C-terminal His tag"></textarea>
-          <label>Protein name / accession / fusion (e.g. "P60568", "demo_reporter fused to demo_secreted_precursor")</label>
-          <input id="identifier" />
-          <label>Or paste an amino-acid sequence (preserved exactly)</label>
-          <textarea id="pasted" rows="2" placeholder="MGSSHHHHHH..."></textarea>
+          <label>Natural-language description — <b>the only required field</b></label>
+          <textarea id="text" rows="3" placeholder="e.g. IL4 fused to lumazine synthase with a flexible linker"></textarea>
+          <div class="hint">Everything below is optional. More detail = a better-constrained design; with less, the app researches and records explicit assumptions instead of guessing silently.</div>
+          <label>Protein name / accession / fusion <span class="pill">optional</span></label>
+          <input id="identifier" placeholder='e.g. "IL4 and lumazine synthase", or "P60568"' />
+          <label>Or paste an amino-acid sequence (preserved exactly) <span class="pill">optional</span></label>
+          <textarea id="pasted" rows="2" placeholder="MGSSHHHHHH... (one sequence; for fusions, paste into the architecture boxes)"></textarea>
           <details>
             <summary>Optional: user-supplied UTRs (opt-in)</summary>
             <label>5′ UTR (RNA/DNA letters)</label>
@@ -35,7 +36,7 @@
         </div>
 
         <div class="panel">
-          <h2>Context (encoded protein ≠ expression host)</h2>
+          <h2>Context <span class="pill">all optional</span> (encoded protein ≠ host)</h2>
           <div class="row">
             <div><label>Protein species (encoded)</label><input id="protein_species" placeholder="e.g. human"/></div>
             <div><label>Expression host (codon table)</label><select id="host"></select></div>
@@ -75,7 +76,8 @@
           <div class="row">
             <div><label>Biological size profile</label><select id="size_profile"></select></div>
             <div><label>Network retrieval (opt-in)</label>
-              <select id="allow_network"><option value="false">off (offline, private)</option><option value="true">on (sends identifiers externally)</option></select>
+              <select id="allow_network"><option value="false">off (offline, private)</option><option value="true">on — auto-resolve names via UniProt</option></select>
+              <div class="hint">On = the app looks up protein names/accessions in UniProt to fetch real sequences. Off = fully offline; named proteins stay unresolved unless you paste a sequence.</div>
             </div>
           </div>
           <div class="btns">

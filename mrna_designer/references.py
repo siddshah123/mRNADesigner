@@ -134,6 +134,77 @@ def fetch_uniprot(accession: str, allow_network: bool = True, timeout: float = 2
                                  provenance=Provenance.ASSUMPTION, retrieval=state)
 
 
+def search_uniprot(
+    name: str,
+    species: str | None = None,
+    allow_network: bool = True,
+    timeout: float = 25.0,
+) -> ReferenceSequence:
+    """Resolve a protein NAME to a real sequence via the UniProt search API
+    (deterministic 'research' — no LLM). Prefers reviewed (Swiss-Prot) entries,
+    optionally filtered by organism. Returns the top hit. On any failure the
+    sequence is empty and the retrieval state records why (never fabricated).
+
+    Requires outbound access to rest.uniprot.org (works on a normal machine;
+    blocked inside network-restricted sandboxes)."""
+    q = name.strip()
+    state = RetrievalState(integration="uniprot_search", attempted=True, live=False, ok=False)
+    if not q:
+        state.detail = "empty query"
+        return ReferenceSequence(name=name, sequence="", provenance=Provenance.ASSUMPTION, retrieval=state)
+    if not allow_network:
+        state.detail = ("network disabled (allow_network=False); enable 'Network retrieval' "
+                        "to let UniProt resolve this protein name.")
+        return ReferenceSequence(name=name, sequence="", provenance=Provenance.ASSUMPTION, retrieval=state)
+    try:
+        import httpx
+
+        state.live = True
+        # Build a UniProt query string. Reviewed entries first; optional organism.
+        query = f'("{q}") AND reviewed:true'
+        if species:
+            query += f' AND organism_name:"{species}"'
+        params = {
+            "query": query,
+            "format": "fasta",
+            "size": "1",
+            "sort": "annotation_score desc",
+        }
+        url = "https://rest.uniprot.org/uniprotkb/search"
+        r = httpx.get(url, params=params, timeout=timeout, follow_redirects=True)
+        if r.status_code != 200 or not r.text.startswith(">"):
+            state.detail = f"HTTP {r.status_code} or no reviewed hit for {q!r}"
+            return ReferenceSequence(name=name, sequence="", provenance=Provenance.ASSUMPTION, retrieval=state)
+        lines = r.text.splitlines()
+        header = lines[0]
+        seq = "".join(l for l in lines[1:] if not l.startswith(">")).replace(" ", "").upper()
+        # header: >sp|ACCESSION|NAME ... OS=Species ... SV=n
+        acc = None
+        hm = re.match(r">\w+\|([^|]+)\|", header)
+        if hm:
+            acc = hm.group(1)
+        sp = None
+        m = re.search(r"OS=([^=]+?)(?: [A-Z]{2}=|$)", header)
+        if m:
+            sp = m.group(1).strip()
+        ver = None
+        m2 = re.search(r"SV=(\d+)", header)
+        if m2:
+            ver = m2.group(1)
+        state.ok = True
+        state.detail = f"UniProt search {q!r} -> {acc} ({len(seq)} aa)"
+        return ReferenceSequence(
+            name=f"{q} (UniProt {acc})", sequence=seq, species=sp, accession=acc,
+            accession_version=ver,
+            source=f"UniProt search for {q!r}; top reviewed hit {acc} "
+            f"(https://www.uniprot.org/uniprotkb/{acc}).",
+            provenance=Provenance.REFERENCE, retrieval=state,
+        )
+    except Exception as e:
+        state.detail = f"{type(e).__name__}: {str(e)[:160]}"
+        return ReferenceSequence(name=name, sequence="", provenance=Provenance.ASSUMPTION, retrieval=state)
+
+
 def demo_as_reference(key: str) -> Optional[ReferenceSequence]:
     p = get_demo_protein(key)
     if not p:
